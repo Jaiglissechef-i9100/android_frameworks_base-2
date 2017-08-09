@@ -4645,7 +4645,7 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
                                         & (~StatusBarManager.DISABLE_HOME)
                                         & (~StatusBarManager.DISABLE_RECENT);
                             }
-                            getStatusBarService().disable(flags, mToken,
+                            getStatusBarService().disableForUser(flags, mToken,
                                     mService.mContext.getPackageName());
                             getStatusBarService().screenPinningStateChanged(true);
                         }
@@ -4662,7 +4662,7 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
                     // When lock task ends, we enable the status bars.
                     try {
                         if (getStatusBarService() != null) {
-                            getStatusBarService().disable(StatusBarManager.DISABLE_NONE, mToken,
+                            getStatusBarService().disableForUser(StatusBarManager.DISABLE_NONE, mToken,
                                     mService.mContext.getPackageName());
                             getStatusBarService().screenPinningStateChanged(false);
                         }
