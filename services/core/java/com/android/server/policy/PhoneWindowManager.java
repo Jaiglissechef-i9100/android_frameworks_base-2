@@ -258,6 +258,7 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.gesture.EdgeGesturePosition;
 import com.android.internal.util.gesture.EdgeServiceConstants;
 import com.android.internal.util.ScreenShapeHelper;
+import com.android.internal.util.omni.OmniSwitchConstants;
 import com.android.internal.utils.du.ActionHandler;
 import com.android.internal.utils.du.DUActionUtils;
 import com.android.internal.widget.PointerLocationView;
@@ -298,7 +299,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     static final String TAG = "WindowManager";
     static final boolean DEBUG = false;
     static final boolean localLOGV = false;
-    static final boolean DEBUG_INPUT = false;
+    static boolean DEBUG_INPUT = false;
     static final boolean DEBUG_KEYGUARD = false;
     static final boolean DEBUG_LAYOUT = false;
     static final boolean DEBUG_SPLASH_SCREEN = false;
@@ -401,6 +402,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private static final String ACTION_TORCH_OFF =
             "com.android.server.policy.PhoneWindowManager.ACTION_TORCH_OFF";
+
+    // OmniSwitch
+    private boolean mOmniSwitchRecents;
 
     /**
      * Keyguard stuff
@@ -1225,6 +1229,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.SYSTEM_NAVIGATION_KEYS_ENABLED), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.RECENTS_OMNI_SWITCH_ENABLED), false, this,
                     UserHandle.USER_ALL);
             updateSettings();
         }
@@ -2460,6 +2467,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mAccessibilityManager = (AccessibilityManager) context.getSystemService(
                 Context.ACCESSIBILITY_SERVICE);
 
+        boolean debugInputOverride = SystemProperties.getBoolean("debug.inputEvent", false);
+        DEBUG_INPUT = DEBUG_INPUT || debugInputOverride;
+
         // register for dock events
         IntentFilter filter = new IntentFilter();
         filter.addAction(UiModeManager.ACTION_ENTER_CAR_MODE);
@@ -2949,6 +2959,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mNavbarVisible = doShowNavbar;
             }
             updateNavigationBarSize();
+
+            mOmniSwitchRecents = Settings.System.getIntForUser(resolver,
+                    Settings.System.RECENTS_OMNI_SWITCH_ENABLED, 0,
+                    UserHandle.USER_CURRENT) == 1;
         }
 
         synchronized (mWindowManagerFuncs.getWindowManagerLock()) {
@@ -4159,6 +4173,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             // Remember that home is pressed and handle special actions.
             if (repeatCount == 0) {
                 mHomePressed = true;
+                if (mOmniSwitchRecents) {
+                    OmniSwitchConstants.hideOmniSwitchRecents(mContext, UserHandle.CURRENT);
+                }
                 if (mHomeDoubleTapPending) {
                     mHomeDoubleTapPending = false;
                     mHandler.removeCallbacks(mHomeDoubleTapTimeoutRunnable);
@@ -4872,6 +4889,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     private void preloadRecentApps() {
+        if (mOmniSwitchRecents) {
+            OmniSwitchConstants.preloadOmniSwitchRecents(mContext, UserHandle.CURRENT);
+            return;
+        }
         mPreloadedRecentApps = true;
         StatusBarManagerInternal statusbar = getStatusBarManagerInternal();
         if (statusbar != null) {
@@ -4880,6 +4901,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     private void cancelPreloadRecentApps() {
+        if (mOmniSwitchRecents) {
+            return;
+        }
         if (mPreloadedRecentApps) {
             mPreloadedRecentApps = false;
             StatusBarManagerInternal statusbar = getStatusBarManagerInternal();
@@ -4890,17 +4914,29 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     private void toggleRecentApps() {
-        mPreloadedRecentApps = false; // preloading no longer needs to be canceled
-        StatusBarManagerInternal statusbar = getStatusBarManagerInternal();
-        if (statusbar != null) {
-            statusbar.toggleRecentApps();
+        if (mOmniSwitchRecents) {
+            OmniSwitchConstants.toggleOmniSwitchRecents(mContext, UserHandle.CURRENT);
+        } else {
+            mPreloadedRecentApps = false; // preloading no longer needs to be canceled
+            StatusBarManagerInternal statusbar = getStatusBarManagerInternal();
+            if (statusbar != null) {
+                statusbar.toggleRecentApps();
+            }
         }
     }
 
     @Override
     public void showRecentApps(boolean fromHome) {
-        mHandler.removeMessages(MSG_DISPATCH_SHOW_RECENTS);
-        mHandler.obtainMessage(MSG_DISPATCH_SHOW_RECENTS, fromHome ? 1 : 0, 0).sendToTarget();
+        if (mOmniSwitchRecents) {
+            if (!fromHome) {
+                OmniSwitchConstants.restoreHomeStack(mContext, UserHandle.CURRENT);
+            } else {
+                OmniSwitchConstants.toggleOmniSwitchRecents(mContext, UserHandle.CURRENT);
+            }
+        } else {
+            mHandler.removeMessages(MSG_DISPATCH_SHOW_RECENTS);
+            mHandler.obtainMessage(MSG_DISPATCH_SHOW_RECENTS, fromHome ? 1 : 0, 0).sendToTarget();
+        }
     }
 
     private void showRecentApps(boolean triggeredFromAltTab, boolean fromHome) {

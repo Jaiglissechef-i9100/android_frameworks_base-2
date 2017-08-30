@@ -5924,6 +5924,14 @@ public final class Settings {
          */
         public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
 
+
+
+        /**
+         * Whether to enable OmniSwitch as recents implementation.
+         * @hide
+         */
+        public static final String RECENTS_OMNI_SWITCH_ENABLED = "recents_omni_switch";
+
        /**
          * Whether to show or hide the edit icon
          * @hide
@@ -6117,6 +6125,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(QS_COLUMNS_LANDSCAPE);
 			PRIVATE_SETTINGS.add(HEADS_UP_NOTIFICATION_SNOOZE);
 			PRIVATE_SETTINGS.add(HEADS_UP_TIMEOUT);
+            PRIVATE_SETTINGS.add(RECENTS_OMNI_SWITCH_ENABLED);
         }
 
         /**
