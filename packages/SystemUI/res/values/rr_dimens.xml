@@ -111,4 +111,6 @@
     <!-- Big clock dozing -->
     <dimen name="dozing_big_clock_padding" format="float">0.33</dimen>
 
+    <dimen name="recents_task_view_header_kill_button_padding">30dp</dimen>
+
 </resources>
