@@ -152,6 +152,11 @@ final class DefaultPermissionGrantPolicy {
         STORAGE_PERMISSIONS.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         STORAGE_PERMISSIONS.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
+    
+    private static final Set<String> LOGCAT_PERMISSIONS = new ArraySet<>();
+    static {
+        LOGCAT_PERMISSIONS.add(Manifest.permission.READ_LOGS);
+    } 
 
     private static final int MSG_READ_DEFAULT_PERMISSION_EXCEPTIONS = 1;
 
@@ -746,6 +751,14 @@ final class DefaultPermissionGrantPolicy {
                         STORAGE_PERMISSIONS, true, userId);
             }
 
+            // aLogcat
+            PackageParser.Package alogcatpackage = getSystemPackageLPr(
+                    "org.jtb.alogcat");
+            if (alogcatpackage != null && doesPackageSupportRuntimePermissions(alogcatpackage)) {
+                grantRuntimePermissionsLPw(alogcatpackage, LOGCAT_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(alogcatpackage, STORAGE_PERMISSIONS, true,userId);
+            }
+             
             mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
         }
     }
