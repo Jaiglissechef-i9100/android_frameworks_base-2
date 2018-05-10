@@ -96,12 +96,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private int mShowCarrierLabel;
     private int mCarrierFontSize;
 
-    private ImageView mRRLogo;
-    private ImageView mRRLogoRight;
     private View mWeatherImageView;
     private View mWeatherTextView;
 
-    private int mShowLogo;
     private int mShowWeather;
     // Custom Logos
     private ImageView mCLogo;
@@ -120,9 +117,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             ContentResolver resolver = getContext().getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_CARRIER),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_LOGO),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP),
@@ -221,12 +215,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mCenterClockLayout = mStatusBar.findViewById(R.id.center_clock_layout);
         Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mSignalClusterView);
         mCustomCarrierLabel = mStatusBar.findViewById(R.id.statusbar_carrier_text);
-        mRRLogo =  (ImageView) mStatusBar.findViewById(R.id.status_bar_logo);
-        mRRLogoRight = (ImageView) mStatusBar.findViewById(R.id.status_bar_logo_right);
         mCLogo = (ImageView) mStatusBar.findViewById(R.id.custom);
         mCLogoRight = (ImageView) mStatusBar.findViewById(R.id.custom_right);
-        Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mRRLogo);
-        Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mRRLogoRight);
         Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mCLogo);
         Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mCLogoRight);
         mWeatherTextView = mStatusBar.findViewById(R.id.weather_temp);
@@ -263,8 +253,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         super.onDestroyView();
         Dependency.get(DarkIconDispatcher.class).removeDarkReceiver(mSignalClusterView);
         Dependency.get(StatusBarIconController.class).removeIconGroup(mDarkIconManager);
-        Dependency.get(DarkIconDispatcher.class).removeDarkReceiver(mRRLogo);
-        Dependency.get(DarkIconDispatcher.class).removeDarkReceiver(mRRLogoRight);
         Dependency.get(DarkIconDispatcher.class).removeDarkReceiver(mCLogo);
         Dependency.get(DarkIconDispatcher.class).removeDarkReceiver(mCLogoRight);
         if (mNetworkController.hasEmergencyCryptKeeperText()) {
@@ -343,9 +331,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void hideSystemIconArea(boolean animate) {
         animateHide(mSystemIconArea, animate, true);
-        if (mShowLogo == 2) {
-            animateHide(mRRLogoRight, animate, false);
-        }
         if (mCustomLogoPos == 2) {
             animateHide(mCLogoRight, animate, false);
         }
@@ -357,9 +342,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void showSystemIconArea(boolean animate) {
         animateShow(mSystemIconArea, animate);
-        if (mShowLogo == 2) {
-            animateShow(mRRLogoRight, animate);
-        }
         if (mCustomLogoPos == 2) {
             animateShow(mCLogoRight, animate);
         }
@@ -371,9 +353,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void hideNotificationIconArea(boolean animate) {
         animateHide(mNotificationIconAreaInner, animate, true);
-        if (mShowLogo == 1) {
-            animateHide(mRRLogo, animate, false);
-        }
         if (mCustomLogoPos == 1) {
             animateHide(mCLogo, animate, false);
         }
@@ -385,9 +364,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void showNotificationIconArea(boolean animate) {
         animateShow(mNotificationIconAreaInner, animate);
-        if (mShowLogo == 1) {
-            animateShow(mRRLogo, animate);
-        }
         if (mCustomLogoPos == 1) {
             animateShow(mCLogo, animate);
         }
@@ -498,8 +474,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         try {
         mShowCarrierLabel = Settings.System.getInt(
                 mContentResolver, Settings.System.STATUS_BAR_CARRIER, 1);
-        mShowLogo = Settings.System.getInt(
-                mContentResolver, Settings.System.STATUS_BAR_LOGO, 0);
         mShowWeather = Settings.System.getInt(
                 mContentResolver, Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0);
         mCustomlogoStyle = Settings.System.getInt(
@@ -517,24 +491,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 	    updateCustomLogo();
         setUpClock();
         updateClockStyle(animate);
-        if (mNotificationIconAreaInner != null) {
-            if (mShowLogo == 1) {
-                if (mNotificationIconAreaInner.getVisibility() == View.VISIBLE) {
-                    animateShow(mRRLogo, animate);
-                }
-            } else if (mShowLogo != 1) {
-                animateHide(mRRLogo, animate, false);
-            }
-        }
-        if (mSystemIconArea != null) {
-            if (mShowLogo == 2) {
-                if (mSystemIconArea.getVisibility() == View.VISIBLE) {
-                    animateShow(mRRLogoRight, animate);
-                }
-            } else if (mShowLogo != 2) {
-                animateHide(mRRLogoRight, animate, false);
-            }
-        }
         if (mNotificationIconAreaInner != null) {
             if (mCustomLogoPos == 1) {
                 if (mNotificationIconAreaInner.getVisibility() == View.VISIBLE) {
@@ -689,11 +645,11 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         } else if ( style == 40) {
             d = getContext().getResources().getDrawable(R.drawable.rr_noring);
         } else if ( style == 41) {
-            d = getContext().getResources().getDrawable(R.drawable.spider1);
+            d = getContext().getResources().getDrawable(R.drawable.rr_logo_yinyang);
         } else if ( style == 42) {
-            d = getContext().getResources().getDrawable(R.drawable.spider2);
+            d = getContext().getResources().getDrawable(R.drawable.spider1);
         } else if ( style == 43) {
-            d = getContext().getResources().getDrawable(R.drawable.orioles_logo);
+            d = getContext().getResources().getDrawable(R.drawable.spider2);
         }
 
         if (mCustomLogoPos == 1) {

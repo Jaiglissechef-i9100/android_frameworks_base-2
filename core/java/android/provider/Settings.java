@@ -4897,11 +4897,6 @@ public final class Settings {
         public static final String TOAST_ICON = "toast_icon";
 
         /**
-         * @hide
-         */
-        public static final String STATUS_BAR_LOGO = "status_bar_logo";
-
-        /**
          * Sensor block per-package
          * @hide
          */
@@ -6088,7 +6083,6 @@ public final class Settings {
             PRIVATE_SETTINGS.add(LOCKSCREEN_MEDIA_METADATA);
             PRIVATE_SETTINGS.add(QS_QUICKBAR_SCROLL_ENABLED);
             PRIVATE_SETTINGS.add(QS_TILE_TITLE_VISIBILITY);
-            PRIVATE_SETTINGS.add(STATUS_BAR_LOGO);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_SHADOW);
             PRIVATE_SETTINGS.add(STATUS_BAR_DAYLIGHT_HEADER_PACK);

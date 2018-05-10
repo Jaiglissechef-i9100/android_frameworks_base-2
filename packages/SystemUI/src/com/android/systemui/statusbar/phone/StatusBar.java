@@ -6889,6 +6889,13 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     };
 
+    protected final ContentObserver mThemeSettingsObserver = new ContentObserver(mHandler) {
+        @Override
+        public void onChange(boolean selfChange) {
+            updateTheme();
+        }
+    };
+
     private final ContentObserver mLockscreenSettingsObserver = new ContentObserver(mHandler) {
         @Override
         public void onChange(boolean selfChange) {
@@ -6915,9 +6922,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(LineageSettings.System.getUriFor(
                     LineageSettings.System.BERRY_GLOBAL_STYLE),
-                    true,this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(LineageSettings.System.getUriFor(
-                    LineageSettings.System.BERRY_FORCE_BLACK),
                     true,this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_SHOW_TICKER),
@@ -7053,9 +7057,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         @Override
         public void onChange(boolean selfChange, Uri uri) {         
             if (uri.equals (LineageSettings.System.getUriFor(
-                    LineageSettings.System.BERRY_GLOBAL_STYLE)) ||
-                    uri.equals (LineageSettings.System.getUriFor(
-                    LineageSettings.System.BERRY_FORCE_BLACK))) {
+                    LineageSettings.System.BERRY_GLOBAL_STYLE))) {
                 updateTheme();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.HEADS_UP_BLACKLIST_VALUES))) {
