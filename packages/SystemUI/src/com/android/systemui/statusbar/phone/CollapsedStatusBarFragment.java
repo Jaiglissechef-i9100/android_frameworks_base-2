@@ -650,6 +650,20 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             d = getContext().getResources().getDrawable(R.drawable.spider1);
         } else if ( style == 43) {
             d = getContext().getResources().getDrawable(R.drawable.spider2);
+        } else if ( style == 44) {
+            d = getContext().getResources().getDrawable(R.drawable.batman);
+        } else if ( style == 45) {
+            d = getContext().getResources().getDrawable(R.drawable.deadpool);
+        } else if ( style == 46) {
+            d = getContext().getResources().getDrawable(R.drawable.decepticons);
+        } else if ( style == 47) {
+            d = getContext().getResources().getDrawable(R.drawable.ironman);
+        } else if ( style == 48) {
+            d = getContext().getResources().getDrawable(R.drawable.minions);
+        } else if ( style == 49) {
+            d = getContext().getResources().getDrawable(R.drawable.spiderman);
+        } else if ( style == 50) {
+            d = getContext().getResources().getDrawable(R.drawable.superman);
         }
 
         if (mCustomLogoPos == 1) {
