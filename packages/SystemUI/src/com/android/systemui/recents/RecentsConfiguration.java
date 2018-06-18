@@ -116,6 +116,7 @@ public class RecentsConfiguration implements NextAlarmChangeCallback {
     // Support for Android Recents for low ram devices. If this field is set to true, then Recents
     // will use the alternative layout.
     public boolean isLowRamDevice;
+    public boolean isLowRamDeviceDefault;
 
     // Enable drag and drop split from Recents. Disabled for low ram devices.
     public boolean dragToSplitEnabled;
@@ -136,7 +137,12 @@ public class RecentsConfiguration implements NextAlarmChangeCallback {
         fakeShadows = res.getBoolean(R.bool.config_recents_fake_shadows);
         svelteLevel = res.getInteger(R.integer.recents_svelte_level);
         isGridEnabled = SystemProperties.getBoolean("ro.recents.grid", false);
-        isLowRamDevice = ActivityManager.isLowRamDeviceStatic();
+        isLowRamDeviceDefault = ActivityManager.isLowRamDeviceStatic();
+        if (isGoLayoutEnabled() == true) {
+            isLowRamDevice = true;
+        } else { 
+            isLowRamDevice = isLowRamDeviceDefault;
+        }
         dragToSplitEnabled = !isLowRamDevice;
 
         float screenDensity = context.getResources().getDisplayMetrics().density;
@@ -284,6 +290,10 @@ public class RecentsConfiguration implements NextAlarmChangeCallback {
 
     public boolean isGridEnabled() {
         return Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.RECENTS_GRID, isGridEnabled ? 1 : 0, UserHandle.USER_CURRENT) == 1;
+                Settings.System.RECENTS_LAYOUT_STYLE, isGridEnabled ? 1 : 0, UserHandle.USER_CURRENT) == 1;
+    }
+    public boolean isGoLayoutEnabled() {
+        return Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.RECENTS_LAYOUT_STYLE, isLowRamDeviceDefault ? 2 : 0, UserHandle.USER_CURRENT) == 2;
     }
 }

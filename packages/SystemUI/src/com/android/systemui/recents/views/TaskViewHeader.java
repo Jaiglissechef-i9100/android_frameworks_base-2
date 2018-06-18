@@ -899,7 +899,7 @@ public class TaskViewHeader extends FrameLayout
                     Settings.System.RECENTS_LOCK_ICON),
                     false, this, UserHandle.USER_ALL);
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.RECENTS_GRID),
+                    Settings.System.RECENTS_LAYOUT_STYLE),
                     false, this, UserHandle.USER_ALL);
             update();
         }
@@ -913,7 +913,7 @@ public class TaskViewHeader extends FrameLayout
             mShowLockIcon = Settings.System.getIntForUser(mContext.getContentResolver(),
                 Settings.System.RECENTS_LOCK_ICON, 0, UserHandle.USER_CURRENT) == 1;
             mRecentsType = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.RECENTS_GRID, 0, UserHandle.USER_CURRENT);
+                Settings.System.RECENTS_LAYOUT_STYLE, 0, UserHandle.USER_CURRENT);
         }
     }
 }

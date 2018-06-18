@@ -4513,11 +4513,11 @@ public final class Settings {
          */
         public static final String DOT_COLOR_SWITCH = "dot_color_switch";
 
- 	/**
-         * show recents in grid style
+        /**
+         * Which recents style to use
          * @hide
          */
-        public static final String RECENTS_GRID = "recents_grid";
+        public static final String RECENTS_LAYOUT_STYLE = "recents_layout_style";
 
         /**
          * Recents lock icon
