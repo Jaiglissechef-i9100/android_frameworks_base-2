@@ -639,10 +639,12 @@ public class Preference implements Comparable<Preference> {
                 }
                 if (mIcon != null) {
                     imageView.setImageDrawable(mIcon);
-                    imageView.setVisibility(View.VISIBLE);
-                } else {
-                    imageView.setVisibility(mIconSpaceReserved ? View.INVISIBLE : View.GONE);
                 }
+            }
+            if (mIcon != null) {
+                imageView.setVisibility(View.VISIBLE);
+            } else {
+                imageView.setVisibility(mIconSpaceReserved ? View.INVISIBLE : View.GONE);
             }
         }
 
