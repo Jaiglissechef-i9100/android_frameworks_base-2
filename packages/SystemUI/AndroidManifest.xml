@@ -200,6 +200,10 @@
     <!-- to change themes - light or dark -->
     <uses-permission android:name="android.permission.CHANGE_OVERLAY_PACKAGES" />
 
+    <!-- Ambient Indication -->
+    <permission android:name="com.google.android.ambientindication.permission.AMBIENT_INDICATION" android:protectionLevel="privileged|signature"/>
+    <uses-permission android:name="com.google.android.ambientindication.permission.AMBIENT_INDICATION"/>
+
     <!-- Reboot -->
     <uses-permission android:name="android.permission.REBOOT" />
     <uses-permission android:name="android.permission.RECOVERY" />

@@ -431,9 +431,8 @@ public class QSFooterImpl extends FrameLayout implements Tunable, QSFooter,
             }
         } else if (v == mDateTimeGroup) {
             if (mAlarmShowing) {
-            Dependency.get(MetricsLogger.class).action(ACTION_QS_DATE,
-                    mNextAlarm != null);
-            if (mNextAlarm != null && mNextAlarm.getShowIntent() != null) {
+                Dependency.get(MetricsLogger.class).action(ACTION_QS_DATE,
+                        true);
                 PendingIntent showIntent = mNextAlarm.getShowIntent();
                 mActivityStarter.startPendingIntentDismissingKeyguard(showIntent);
            } else {
