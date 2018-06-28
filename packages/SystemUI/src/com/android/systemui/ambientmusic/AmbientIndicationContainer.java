@@ -1,6 +1,7 @@
 package com.android.systemui.ambientmusic;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.MediaMetadata;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -12,13 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.android.systemui.AutoReinflateContainer;
 import com.android.systemui.R;
-import com.android.systemui.ambientmusic.AmbientIndicationInflateListener;
-import com.android.systemui.AutoReinflateContainer;
 import com.android.systemui.doze.DozeLog;
-import com.android.systemui.doze.DozeReceiver;
 import com.android.systemui.statusbar.phone.StatusBar;
+
+import com.android.systemui.ambientmusic.AmbientIndicationInflateListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -135,9 +136,7 @@ public class AmbientIndicationContainer extends AutoReinflateContainer {
                 }
             }
         }
-        if (mDozing) {
-            // if we are already showing an Ambient Notification with track info,
-            // stop the current scrolling and start it delayed again for the next song
+        if (charSequence != null) {
             setTickerMarquee(true);
         }
 
