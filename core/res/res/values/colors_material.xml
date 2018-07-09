@@ -41,6 +41,7 @@
 
     <color name="accent_material_700">@color/accent_material_light</color>
     <color name="accent_material_light">#4285f4</color><!-- RR system accent color -->
+    <color name="accent_material_light_lxx">#B34285F4</color><!-- RR system accent color -->
     <color name="accent_material_dark">@color/accent_material_light</color>
     <color name="accent_material_50">@color/accent_material_light</color>
 
